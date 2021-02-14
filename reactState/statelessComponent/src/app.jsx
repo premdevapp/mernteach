@@ -19,22 +19,20 @@ const intialIssues = [
   },
 ];
 
-class IssueRow extends React.Component {
-  render() {
-    const issue = this.props.issue;
-    return (
-      <tr>
-        <td>{issue.id}</td>
-        <td>{issue.status}</td>
-        <td>{issue.owner}</td>
-        <td>{issue.created.toDateString()}</td>
-        <td>{issue.effort}</td>
-        <td>{issue.due ? issue.due.toDateString() : ""}</td>
-        <td>{issue.title}</td>
-      </tr>
-    );
-  }
-}
+const IssueRow = (props) => {
+  const issue = props.issue;
+  return (
+    <tr>
+      <td>{issue.id}</td>
+      <td>{issue.status}</td>
+      <td>{issue.owner}</td>
+      <td>{issue.created.toDateString()}</td>
+      <td>{issue.effort}</td>
+      <td>{issue.due ? issue.due.toDateString() : ""}</td>
+      <td>{issue.title}</td>
+    </tr>
+  );
+};
 
 class IssueFilter extends React.Component {
   render() {
@@ -42,30 +40,27 @@ class IssueFilter extends React.Component {
   }
 }
 
-class IssueTabel extends React.Component {
-  render() {
-    const IssueRows = this.props.issues.map((issue) => (
-      <IssueRow key={issue.id} issue={issue} />
-    ));
-
-    return (
-      <table className="borderd-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Status</th>
-            <th>Owner</th>
-            <th>Created</th>
-            <th>Effort</th>
-            <th>Due Date</th>
-            <th>Title</th>
-          </tr>
-        </thead>
-        <tbody>{IssueRows}</tbody>
-      </table>
-    );
-  }
-}
+const IssueTabel = (props) => {
+  const IssueRows = props.issues.map((issue) => (
+    <IssueRow key={issue.id} issue={issue} />
+  ));
+  return (
+    <table className="borderd-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Status</th>
+          <th>Owner</th>
+          <th>Created</th>
+          <th>Effort</th>
+          <th>Due Date</th>
+          <th>Title</th>
+        </tr>
+      </thead>
+      <tbody>{IssueRows}</tbody>
+    </table>
+  );
+};
 
 class IssueAdd extends React.Component {
   constructor() {

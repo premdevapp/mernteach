@@ -52,37 +52,20 @@ var intialIssues = [{
   title: "Missing bottom border on panel"
 }];
 
-var IssueRow = /*#__PURE__*/function (_React$Component) {
-  _inherits(IssueRow, _React$Component);
+var IssueRow = function IssueRow(props) {
+  var issue = props.issue;
+  return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : ""), /*#__PURE__*/React.createElement("td", null, issue.title));
+};
 
-  var _super = _createSuper(IssueRow);
+var IssueFilter = /*#__PURE__*/function (_React$Component) {
+  _inherits(IssueFilter, _React$Component);
 
-  function IssueRow() {
-    _classCallCheck(this, IssueRow);
-
-    return _super.apply(this, arguments);
-  }
-
-  _createClass(IssueRow, [{
-    key: "render",
-    value: function render() {
-      var issue = this.props.issue;
-      return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : ""), /*#__PURE__*/React.createElement("td", null, issue.title));
-    }
-  }]);
-
-  return IssueRow;
-}(React.Component);
-
-var IssueFilter = /*#__PURE__*/function (_React$Component2) {
-  _inherits(IssueFilter, _React$Component2);
-
-  var _super2 = _createSuper(IssueFilter);
+  var _super = _createSuper(IssueFilter);
 
   function IssueFilter() {
     _classCallCheck(this, IssueFilter);
 
-    return _super2.apply(this, arguments);
+    return _super.apply(this, arguments);
   }
 
   _createClass(IssueFilter, [{
@@ -95,46 +78,29 @@ var IssueFilter = /*#__PURE__*/function (_React$Component2) {
   return IssueFilter;
 }(React.Component);
 
-var IssueTabel = /*#__PURE__*/function (_React$Component3) {
-  _inherits(IssueTabel, _React$Component3);
+var IssueTabel = function IssueTabel(props) {
+  var IssueRows = props.issues.map(function (issue) {
+    return /*#__PURE__*/React.createElement(IssueRow, {
+      key: issue.id,
+      issue: issue
+    });
+  });
+  return /*#__PURE__*/React.createElement("table", {
+    className: "borderd-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "ID"), /*#__PURE__*/React.createElement("th", null, "Status"), /*#__PURE__*/React.createElement("th", null, "Owner"), /*#__PURE__*/React.createElement("th", null, "Created"), /*#__PURE__*/React.createElement("th", null, "Effort"), /*#__PURE__*/React.createElement("th", null, "Due Date"), /*#__PURE__*/React.createElement("th", null, "Title"))), /*#__PURE__*/React.createElement("tbody", null, IssueRows));
+};
 
-  var _super3 = _createSuper(IssueTabel);
+var IssueAdd = /*#__PURE__*/function (_React$Component2) {
+  _inherits(IssueAdd, _React$Component2);
 
-  function IssueTabel() {
-    _classCallCheck(this, IssueTabel);
-
-    return _super3.apply(this, arguments);
-  }
-
-  _createClass(IssueTabel, [{
-    key: "render",
-    value: function render() {
-      var IssueRows = this.props.issues.map(function (issue) {
-        return /*#__PURE__*/React.createElement(IssueRow, {
-          key: issue.id,
-          issue: issue
-        });
-      });
-      return /*#__PURE__*/React.createElement("table", {
-        className: "borderd-table"
-      }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "ID"), /*#__PURE__*/React.createElement("th", null, "Status"), /*#__PURE__*/React.createElement("th", null, "Owner"), /*#__PURE__*/React.createElement("th", null, "Created"), /*#__PURE__*/React.createElement("th", null, "Effort"), /*#__PURE__*/React.createElement("th", null, "Due Date"), /*#__PURE__*/React.createElement("th", null, "Title"))), /*#__PURE__*/React.createElement("tbody", null, IssueRows));
-    }
-  }]);
-
-  return IssueTabel;
-}(React.Component);
-
-var IssueAdd = /*#__PURE__*/function (_React$Component4) {
-  _inherits(IssueAdd, _React$Component4);
-
-  var _super4 = _createSuper(IssueAdd);
+  var _super2 = _createSuper(IssueAdd);
 
   function IssueAdd() {
     var _this;
 
     _classCallCheck(this, IssueAdd);
 
-    _this = _super4.call(this);
+    _this = _super2.call(this);
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -174,17 +140,17 @@ var IssueAdd = /*#__PURE__*/function (_React$Component4) {
   return IssueAdd;
 }(React.Component);
 
-var IssueList = /*#__PURE__*/function (_React$Component5) {
-  _inherits(IssueList, _React$Component5);
+var IssueList = /*#__PURE__*/function (_React$Component3) {
+  _inherits(IssueList, _React$Component3);
 
-  var _super5 = _createSuper(IssueList);
+  var _super3 = _createSuper(IssueList);
 
   function IssueList() {
     var _this2;
 
     _classCallCheck(this, IssueList);
 
-    _this2 = _super5.call(this);
+    _this2 = _super3.call(this);
     _this2.state = {
       issues: []
     };
