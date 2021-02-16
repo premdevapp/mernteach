@@ -5,7 +5,13 @@ function jsonDateReviver(key, value) {
   return value;
 }
 
-const IssueRow = (props) => {
+class IssueFilter extends React.Component {
+  render() {
+    return <div>This is a placeholder for the issue filter.</div>;
+  }
+}
+
+function IssueRow(props) {
   const issue = props.issue;
   return (
     <tr>
@@ -18,20 +24,15 @@ const IssueRow = (props) => {
       <td>{issue.title}</td>
     </tr>
   );
-};
-
-class IssueFilter extends React.Component {
-  render() {
-    return <div>This is placeholder for issue tracker</div>;
-  }
 }
 
-const IssueTabel = (props) => {
-  const IssueRows = props.issues.map((issue) => (
+function IssueTable(props) {
+  const issueRows = props.issues.map((issue) => (
     <IssueRow key={issue.id} issue={issue} />
   ));
+
   return (
-    <table className="borderd-table">
+    <table className="bordered-table">
       <thead>
         <tr>
           <th>ID</th>
@@ -43,10 +44,10 @@ const IssueTabel = (props) => {
           <th>Title</th>
         </tr>
       </thead>
-      <tbody>{IssueRows}</tbody>
+      <tbody>{issueRows}</tbody>
     </table>
   );
-};
+}
 
 class IssueAdd extends React.Component {
   constructor() {
@@ -54,22 +55,22 @@ class IssueAdd extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    const { issueAddForm } = document.forms;
+  handleSubmit(e) {
+    e.preventDefault();
+    const form = document.forms.issueAdd;
     const issue = {
-      owner: issueAddForm.owner.value,
-      title: issueAddForm.title.value,
-      status: "New",
+      owner: form.owner.value,
+      title: form.title.value,
+      due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10),
     };
     this.props.createIssue(issue);
-    issueAddForm.owner.value = "";
-    issueAddForm.title.value = "";
+    form.owner.value = "";
+    form.title.value = "";
   }
 
   render() {
     return (
-      <form name="issueAddForm" onSubmit={this.handleSubmit}>
+      <form name="issueAdd" onSubmit={this.handleSubmit}>
         <input type="text" name="owner" placeholder="Owner" />
         <input type="text" name="title" placeholder="Title" />
         <button>Add</button>
@@ -77,6 +78,7 @@ class IssueAdd extends React.Component {
     );
   }
 }
+
 class IssueList extends React.Component {
   constructor() {
     super();
@@ -88,18 +90,11 @@ class IssueList extends React.Component {
     this.loadData();
   }
 
-  createIssue(issue) {
-    issue.id = this.state.issues.length + 1;
-    issue.created = new Date();
-    const newIssueList = [...this.state.issues];
-    newIssueList.push(issue);
-    this.setState({ issues: newIssueList });
-  }
-
   async loadData() {
     const query = `query {
       issueList {
-        id title status owner created effort due
+        id title status owner
+        created effort due
       }
     }`;
 
@@ -108,11 +103,25 @@ class IssueList extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query }),
     });
-
-    //const result = await response.json();
     const body = await response.text();
     const result = JSON.parse(body, jsonDateReviver);
     this.setState({ issues: result.data.issueList });
+  }
+
+  async createIssue(issue) {
+    const query = `mutation {
+      issueAdd($issue: IssueInputs!) {
+        issueAdd(issue: $issue){
+        id
+      }
+    }`;
+
+    const response = await fetch("/graphql", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, variables: { issue } }),
+    });
+    this.loadData();
   }
 
   render() {
@@ -121,7 +130,7 @@ class IssueList extends React.Component {
         <h1>Issue Tracker</h1>
         <IssueFilter />
         <hr />
-        <IssueTabel issues={this.state.issues} />
+        <IssueTable issues={this.state.issues} />
         <hr />
         <IssueAdd createIssue={this.createIssue} />
       </React.Fragment>
@@ -130,4 +139,5 @@ class IssueList extends React.Component {
 }
 
 const element = <IssueList />;
+
 ReactDOM.render(element, document.querySelector(".contents"));
